@@ -1,14 +1,27 @@
 services:
   stats-server:
+    build: ./stats/stats-server
+    image: ewm-stats-server
+    container_name: ewm-stats-server
     ports:
       - "9090:9090"
+    depends_on:
+      stats-db:
+        condition: service_healthy
+    environment:
+      STATS_DB_URL: jdbc:postgresql://stats-db:5432/ewm_stats
+      STATS_DB_USER: stats
+      STATS_DB_PASSWORD: stats
 
   stats-db:
     image: postgres:16.1
-
-  ewm-service:
-    ports:
-      - "8080:8080"
-
-  ewm-db:
-    image: postgres:16.1
+    container_name: ewm-stats-db
+    environment:
+      POSTGRES_DB: ewm_stats
+      POSTGRES_USER: stats
+      POSTGRES_PASSWORD: stats
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stats -d ewm_stats"]
+      interval: 5s
+      timeout: 5s
+      retries: 10

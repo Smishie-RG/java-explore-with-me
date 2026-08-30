@@ -7,3 +7,4 @@
 ## Дополнительная функциональность
 
 Комментарии к событиям с возможностью модерации.
+https://github.com/Smishie-RG/java-explore-with-me/pull/5
